@@ -32,6 +32,22 @@ async function* readFileLines(filePath) {
   }
 }
 
+async function* batchItems(iterable, batchSize) {
+  let batch = [];
+
+  for await (const item of iterable) {
+    batch.push(item);
+    if (batch.length >= batchSize) {
+      yield batch;
+      batch = [];
+    }
+  }
+
+  if (batch.length > 0) {
+    yield batch;
+  }
+}
+
 async function processStream(asyncIterable) {
   let count = 0;
   let sum = 0;
