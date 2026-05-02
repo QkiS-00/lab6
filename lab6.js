@@ -4,6 +4,20 @@ async function* generateLargeDataset(size) {
   }
 }
 
+async function* asyncFilter(iterable, predicate) {
+  for await (const item of iterable) {
+    if (await predicate(item)) {
+      yield item;
+    }
+  }
+}
+
+async function* asyncMap(iterable, transform) {
+  for await (const item of iterable) {
+    yield await transform(item);
+  }
+}
+
 async function processStream(asyncIterable) {
   let count = 0;
   let sum = 0;
