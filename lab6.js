@@ -59,3 +59,12 @@ async function processStream(asyncIterable) {
 
   return { count, average: sum / count };
 }
+
+async function* take(iterable, limit) {
+  let count = 0;
+  for await (const item of iterable) {
+    if (count >= limit) break;
+    yield item;
+    count += 1;
+  }
+}

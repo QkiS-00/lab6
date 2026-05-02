@@ -5,6 +5,7 @@ import {
   batchItems,
   readFileLines,
   processStream,
+  take,
 } from './laba6.js';
 
 async function runDemo() {
@@ -21,10 +22,19 @@ async function runDemo() {
   const stats = await processStream(mapped);
   console.log('Stats:', stats);
 
+  console.log('\n=== Take — перші 5 елементів ===');
+
+  const dataset2 = generateLargeDataset(1_000_000);
+  const first5 = take(dataset2, 5);
+
+  for await (const item of first5) {
+    console.log('Item:', item);
+  }
+
   console.log('\n=== Batch Processing ===');
 
-  const dataset2 = generateLargeDataset(100);
-  const batched = batchItems(dataset2, 10);
+  const dataset3 = generateLargeDataset(100);
+  const batched = batchItems(dataset3, 10);
 
   let batchNum = 0;
   for await (const batch of batched) {
@@ -32,7 +42,7 @@ async function runDemo() {
     console.log(`Batch ${batchNum}: ${batch.length} items`);
   }
 
-  console.log('\n=== File Stream (якщо є файл) ===');
+  console.log('\n=== File Stream ===');
   try {
     const lines = readFileLines('./data.txt');
     let lineCount = 0;
