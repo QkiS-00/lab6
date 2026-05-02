@@ -1,3 +1,6 @@
+import { createReadStream } from 'fs';
+import { createInterface } from 'readline';
+
 async function* generateLargeDataset(size) {
   for (let i = 0; i < size; i++) {
     yield { id: i, value: Math.random() * 1000 };
@@ -15,6 +18,17 @@ async function* asyncFilter(iterable, predicate) {
 async function* asyncMap(iterable, transform) {
   for await (const item of iterable) {
     yield await transform(item);
+  }
+}
+
+async function* readFileLines(filePath) {
+  const fileStream = createReadStream(filePath, { encoding: 'utf8' });
+  const rl = createInterface({ input: fileStream, crlfDelay: Infinity });
+
+  for await (const line of rl) {
+    if (line.trim()) {
+      yield line;
+    }
   }
 }
 
